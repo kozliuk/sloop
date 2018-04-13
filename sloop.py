@@ -63,17 +63,19 @@ class AsyncLoopThread(threading.Thread):
 
 
 def _callback(x):
-    global alt
     try:
         x.result()
     except asyncio.CancelledError:
         pass
-    if AUTO_CLOSE:
-        pending = [task for task in asyncio.Task.all_tasks(loop=loop) if not task.done()]
-        if len(pending) == 1:
-            asyncio.run_coroutine_threadsafe(alt._astop(), loop=loop)
-            atexit.unregister(alt.stop)
-            alt = None
+
+
+def _auto_close(_):
+    global alt
+    pending = [task for task in asyncio.Task.all_tasks(loop=loop) if not task.done()]
+    if len(pending) == 1:
+        asyncio.run_coroutine_threadsafe(alt._astop(), loop=loop)
+        atexit.unregister(alt.stop)
+        alt = None
 
 
 def wrap_coro(callback=_callback):
@@ -83,6 +85,8 @@ def wrap_coro(callback=_callback):
         def inner2(*args, **kwargs):
             future = call(f(*args, **kwargs))
             future.add_done_callback(callback)
+            if AUTO_CLOSE:
+                future.add_done_callback(_auto_close)
             return future
         return inner2
     return inner1
