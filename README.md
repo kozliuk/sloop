@@ -3,4 +3,4 @@ asyncio + pyqt(pyside)
 
 way to use asyncio with pyqt(pyside) framework
 
-Example in __main__.py
+Example in \_\_main\_\_.py
