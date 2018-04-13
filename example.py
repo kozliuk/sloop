@@ -30,11 +30,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(widget)
 
-        # self.button.clicked.connect(self._handle)
         self.button.clicked.connect(self.button_click)
         self.result_signal.connect(self._handle_result)
 
-    @sloop.wrap_coro
+    @sloop.wrap_coro()
     async def button_click(self, *args, **kwargs):
         await asyncio.sleep(random.random() * 10)
         label = random.choice([self.label1, self.label2, self.label3, self.label4])

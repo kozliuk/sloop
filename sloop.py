@@ -68,13 +68,16 @@ def _callback(x):
         pass
 
 
-def wrap_coro(f):
-    @wraps(f)
-    def inner(*args, **kwargs):
-        future = call(f(*args, **kwargs))
-        future.add_done_callback(_callback)
-        return
-    return inner
+def wrap_coro(callback=_callback):
+
+    def inner1(f):
+        @wraps(f)
+        def inner2(*args, **kwargs):
+            future = call(f(*args, **kwargs))
+            future.add_done_callback(callback)
+            return future
+        return inner2
+    return inner1
 
 
 
