@@ -2,7 +2,11 @@ import sloop
 import asyncio
 import random
 
+
 from PyQt5 import QtCore, QtWidgets
+
+
+sloop.AUTO_CLOSE = True
 
 
 class MainWindow(QtWidgets.QMainWindow):

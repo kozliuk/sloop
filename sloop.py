@@ -12,6 +12,7 @@ loop = asyncio.get_event_loop()
 
 alt = None
 DAEMON = True
+AUTO_CLOSE = False
 
 
 def get_loop():
@@ -62,10 +63,17 @@ class AsyncLoopThread(threading.Thread):
 
 
 def _callback(x):
+    global alt
     try:
         x.result()
     except asyncio.CancelledError:
         pass
+    if AUTO_CLOSE:
+        pending = [task for task in asyncio.Task.all_tasks(loop=loop) if not task.done()]
+        if len(pending) == 1:
+            asyncio.run_coroutine_threadsafe(alt._astop(), loop=loop)
+            atexit.unregister(alt.stop)
+            alt = None
 
 
 def wrap_coro(callback=_callback):
