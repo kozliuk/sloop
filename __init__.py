@@ -1,1 +1,1 @@
-from sloop import *
+from .sloop import *
