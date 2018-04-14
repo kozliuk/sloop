@@ -6,7 +6,7 @@ import random
 from PyQt5 import QtCore, QtWidgets
 
 
-sloop.AUTO_CLOSE = True
+sloop.AUTO_CLOSE = False
 sloop.DAEMON = True
 
 
