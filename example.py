@@ -35,8 +35,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(widget)
 
-        # self.button.clicked.connect(self.button_click)
-        self.button.clicked.connect(self.button_click2)
+        self.button.clicked.connect(self.button_click)
+        # self.button.clicked.connect(self.button_click2)
         self.result_signal.connect(self._handle_result)
 
     @sloop.wrap_in_thread()
