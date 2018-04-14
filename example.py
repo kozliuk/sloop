@@ -42,7 +42,10 @@ class MainWindow(QtWidgets.QMainWindow):
     @sloop.wrap_in_thread()
     def button_click2(self, *args):
         import time
-        time.sleep(random.random() * 10)
+        for i in range(10):
+            if not sloop.alt.is_alive():
+                return
+            time.sleep(random.random())
         label = random.choice([self.label1, self.label2, self.label3, self.label4])
         self.result_signal.emit(label)
 
@@ -63,6 +66,7 @@ def main():
     window = MainWindow()
     window.show()
     app.exec_()
+    print("here")
 
 
 if __name__ == '__main__':
