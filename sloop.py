@@ -25,6 +25,12 @@ def call(coro):
     return asyncio.run_coroutine_threadsafe(coro, get_loop())
 
 
+def threaded(func, *args):
+    if alt is None:
+        _initialize()
+    return get_loop().run_in_executor(None, func, *args)
+
+
 def _initialize():
     global alt
     alt = AsyncLoopThread(loop)
@@ -92,4 +98,15 @@ def wrap_coro(callback=_callback):
     return inner1
 
 
+def wrap_in_thread(callback=_callback):
 
+    def inner1(f):
+        @wraps(f)
+        def inner2(*args):
+            future = threaded(f, *args)
+            future.add_done_callback(callback)
+            if AUTO_CLOSE:
+                future.add_done_callback(_auto_close)
+            return future
+        return inner2
+    return inner1

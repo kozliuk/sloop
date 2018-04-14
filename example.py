@@ -7,6 +7,7 @@ from PyQt5 import QtCore, QtWidgets
 
 
 sloop.AUTO_CLOSE = True
+sloop.DAEMON = True
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -34,8 +35,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(widget)
 
-        self.button.clicked.connect(self.button_click)
+        # self.button.clicked.connect(self.button_click)
+        self.button.clicked.connect(self.button_click2)
         self.result_signal.connect(self._handle_result)
+
+    @sloop.wrap_in_thread()
+    def button_click2(self, *args):
+        import time
+        time.sleep(random.random() * 10)
+        label = random.choice([self.label1, self.label2, self.label3, self.label4])
+        self.result_signal.emit(label)
 
     @sloop.wrap_coro()
     async def button_click(self, *args, **kwargs):
