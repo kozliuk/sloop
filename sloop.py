@@ -73,6 +73,8 @@ def _callback(x):
         x.result()
     except asyncio.CancelledError:
         pass
+    except Exception as err:
+        print(x)
 
 
 def _auto_close(_):
